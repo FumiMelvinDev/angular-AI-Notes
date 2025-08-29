@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Auth } from '../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -9,6 +11,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class Register {
   registerForm: FormGroup;
+  authService = inject(Auth);
+  router = inject(Router);
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
@@ -19,10 +23,18 @@ export class Register {
     });
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      console.log('Form Submitted:', this.registerForm.value);
-      // Call authentication service here
+  onSubmit(): void {
+    const rawForm = this.registerForm.getRawValue();
+    if (rawForm.password !== rawForm.confirmPassword) {
+      console.error('Passwords do not match');
+      return;
     }
+    this.authService.register(rawForm.name, rawForm.email, rawForm.password).subscribe((result) => {
+      if (result.error) {
+        console.error('Registration error:', result.error);
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    });
   }
 }
