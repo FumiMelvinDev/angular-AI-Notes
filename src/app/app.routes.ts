@@ -19,13 +19,7 @@ export const routes: Routes = [
     component: Register,
   },
   {
-    path: '',
-    component: App,
-    children: [
-      {
-        path: 'home',
-        component: Home,
-      },
-    ],
+    path: 'home',
+    component: Home,
   },
 ];
