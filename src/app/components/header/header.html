@@ -2,9 +2,18 @@
   <img src="assets/logo.png" alt="Notes Logo" width="125px" />
   <div class="flex gap-4">
     <ng-container *ngIf="authService.currentUser() as user">
-      <button>AI Chat</button>
-      <button>User</button>
+      <button>{{ user.name }}</button>
+      <button
+        class="px-4 py-1 border rounded-md bg-purple-700 text-amber-100 font-mono font-semibold cursor-pointer"
+      >
+        AI Chat
+      </button>
+      <button
+        class="px-4 py-1 border rounded-md bg-orange-700 text-amber-100 font-mono font-semibold cursor-pointer"
+        (click)="logout()"
+      >
+        Logout
+      </button>
     </ng-container>
-    <button (click)="logout()">Logout</button>
   </div>
 </nav>
