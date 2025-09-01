@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Header } from './components/header/header';
-import { Auth } from './services/auth';
+import { AuthService } from './services/auth';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import { Auth } from './services/auth';
 export class App {
   protected readonly title = signal('notes-app');
 
-  authService = inject(Auth);
+  authService = inject(AuthService);
   router = inject(Router);
 
   ngOnInit(): void {

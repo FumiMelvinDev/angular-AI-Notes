@@ -6,7 +6,7 @@ import { from, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class Auth {
+export class AuthService {
   supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   currentUser = signal<{ email: string; name: string } | null>(null);
 

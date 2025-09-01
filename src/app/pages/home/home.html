@@ -1,1 +1,36 @@
-<p>home works!</p>
+<div class="flex items-center justify-between p-4">
+  <!-- Left: home works (hidden on small screens) -->
+  <p class="hidden md:block text-lg font-semibold">home works!</p>
+
+  <!-- Hamburger menu (visible only on small screens) -->
+  <button class="md:hidden flex flex-col space-y-1" (click)="toggleDrawer()">
+    <span class="block w-6 h-0.5 bg-gray-800"></span>
+    <span class="block w-6 h-0.5 bg-gray-800"></span>
+    <span class="block w-6 h-0.5 bg-gray-800"></span>
+  </button>
+
+  <!-- Right: note form -->
+  <div class="w-full md:w-1/3">
+    <app-note-form />
+  </div>
+</div>
+
+<!-- Side Drawer -->
+<div
+  class="fixed inset-0 bg-purple-100 opacity-50 z-40 transition-opacity md:hidden"
+  *ngIf="drawerOpen"
+  (click)="toggleDrawer()"
+></div>
+
+<div
+  class="fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 md:hidden"
+  [ngClass]="{ '-translate-x-full': !drawerOpen, 'translate-x-0': drawerOpen }"
+>
+  <div class="border-b-2 border-gray-300 flex justify-between items-center">
+    <img src="assets/logo.png" alt="Notes Logo" width="100px" />
+    <button (click)="toggleDrawer()" class="text-gray-600 text-2xl pr-2">✕</button>
+  </div>
+  <div class="p-4">
+    <!-- Show my notes here -->
+  </div>
+</div>
