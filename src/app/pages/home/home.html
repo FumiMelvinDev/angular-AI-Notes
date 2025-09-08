@@ -1,6 +1,38 @@
 <div class="flex items-center justify-between p-4">
   <!-- Left: home works (hidden on small screens) -->
-  <p class="hidden md:block text-lg font-semibold">home works!</p>
+  <div class="p-4 hidden md:block">
+    <div *ngIf="loading()">Loading notes...</div>
+    <div *ngIf="!loading() && notes().length === 0">No notes yet.</div>
+    <ul *ngIf="notes().length > 0">
+      <li
+        *ngFor="let note of notes()"
+        class="mb-1 border-b pb-1 flex items-center justify-between text-sm"
+      >
+        <div *ngIf="editingNoteId() !== note.id">{{ note.text }}</div>
+        <div *ngIf="editingNoteId() === note.id">
+          <input
+            [value]="editText()"
+            (input)="editText.set($event.target.value)"
+            class="border px-2 py-1 rounded w-2/3"
+          />
+          <button (click)="saveEdit(note)" class="ml-2 px-2 py-1 bg-green-600 text-white rounded">
+            Save
+          </button>
+          <button (click)="cancelEdit()" class="ml-2 px-2 py-1 bg-gray-400 text-white rounded">
+            Cancel
+          </button>
+        </div>
+        <div>
+          <button (click)="startEdit(note)" class="ml-2 px-2 py-1 bg-blue-600 text-white rounded">
+            Edit
+          </button>
+          <button (click)="deleteNote(note)" class="ml-2 px-2 py-1 bg-red-600 text-white rounded">
+            Delete
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
 
   <!-- Hamburger menu (visible only on small screens) -->
   <button class="md:hidden flex flex-col space-y-1" (click)="toggleDrawer()">
@@ -11,7 +43,17 @@
 
   <!-- Right: note form -->
   <div class="w-full md:w-1/3">
-    <app-note-form />
+    <!-- Note creation form -->
+    <form (submit)="$event.preventDefault(); addNote(noteInput.value); noteInput.value = ''">
+      <input
+        #noteInput
+        type="text"
+        placeholder="Write a note..."
+        class="border px-2 py-1 rounded w-2/3"
+      />
+      <button type="submit" class="ml-2 px-4 py-1 bg-purple-700 text-white rounded">Add</button>
+    </form>
+    <div *ngIf="errorMsg()" class="text-red-600 mt-2">{{ errorMsg() }}</div>
   </div>
 </div>
 
@@ -21,7 +63,6 @@
   *ngIf="drawerOpen"
   (click)="toggleDrawer()"
 ></div>
-
 <div
   class="fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 md:hidden"
   [ngClass]="{ '-translate-x-full': !drawerOpen, 'translate-x-0': drawerOpen }"
@@ -30,7 +71,22 @@
     <img src="assets/logo.png" alt="Notes Logo" width="100px" />
     <button (click)="toggleDrawer()" class="text-gray-600 text-2xl pr-2">✕</button>
   </div>
+
+  <!-- Mobile Notes Card UI inside drawer -->
   <div class="p-4">
-    <!-- Show my notes here -->
+    <h1 class="text-2xl font-serif text-center mb-4 text-gray-700">Notes</h1>
+    <div *ngIf="loading()" class="text-center text-gray-500">Loading notes...</div>
+    <div *ngIf="!loading() && notes().length === 0" class="text-center text-gray-500">
+      No notes yet.
+    </div>
+    <div class="flex flex-col gap-4 max-h-[70vh] overflow-auto pr-2">
+      <div
+        *ngFor="let note of notes()"
+        class="bg-white rounded-xl shadow p-4 flex items-center justify-between"
+      >
+        <span class="text-base text-gray-800">{{ note.text }}</span>
+        <button class="text-2xl text-gray-700 px-2">&#8942;</button>
+      </div>
+    </div>
   </div>
 </div>

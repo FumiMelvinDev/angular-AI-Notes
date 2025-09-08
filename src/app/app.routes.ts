@@ -2,11 +2,12 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Home } from './pages/home/home';
+import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: localStorage.getItem('supabaseSession') ? 'home' : 'login',
     pathMatch: 'full',
   },
   {
@@ -20,5 +21,6 @@ export const routes: Routes = [
   {
     path: 'home',
     component: Home,
+    canActivate: [authGuard],
   },
 ];

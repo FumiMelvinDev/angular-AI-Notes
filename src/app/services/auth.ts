@@ -8,7 +8,7 @@ import { from, Observable } from 'rxjs';
 })
 export class AuthService {
   supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-  currentUser = signal<{ email: string; name: string } | null>(null);
+  currentUser = signal<{ id: string; email: string; name: string } | null>(null);
 
   register(name: string, email: string, password: string): Observable<AuthResponse> {
     const promise = this.supabase.auth
@@ -49,7 +49,17 @@ export class AuthService {
     return from(promise);
   }
 
+  setSession(session: any) {
+    if (session) {
+      localStorage.setItem('supabaseSession', JSON.stringify(session));
+    } else {
+      localStorage.removeItem('supabaseSession');
+    }
+  }
+
   logout(): void {
     this.supabase.auth.signOut();
+    this.setSession(null);
+    this.currentUser.set(null);
   }
 }
